@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Exploration - Time Series Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom styles for the Inter font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen text-gray-800 p-4 sm:p-8">
+    <div class="max-w-7xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden p-6 sm:p-10">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-4 tracking-tight">
+                Data Exploration
+            </h1>
+            <p class="text-lg text-gray-600">
+                Visualizing key aspects of your 'department_17_sales' data
+            </p>
+            <nav class="mt-6">
+                <a href="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition ease-in-out duration-150">
+                    <i class="fas fa-rocket -ml-1 mr-3 h-5 w-5"></i> <!-- Rocket Icon -->
+                    Back to Dashboard
+                </a>
+            </nav>
+        </header>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold text-indigo-600 mb-5 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-2 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h14a1 1 0 001-1V4a1 1 0 00-1-1H3zm11.707 3.293a1 1 0 00-1.414 0L10 9.586 7.707 7.293a1 1 0 00-1.414 1.414L8.586 11l-2.293 2.293a1 1 0 001.414 1.414L10 12.414l2.293 2.293a1 1 0 001.414-1.414L11.414 11l2.293-2.293a1 1 0 000-1.414z" clip-rule="evenodd" />
+                </svg>
+                Initial Data Insights
+            </h2>
+            {% if plots.main_plot %}
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
+                <img src="data:image/png;base64,{{ plots.main_plot }}" alt="Data Exploration Plots" class="w-full h-auto rounded-lg shadow-md">
+                <p class="text-center text-sm text-gray-600 mt-3">
+                    This grid of plots provides insights into the Department 17 sales data, including time series, distribution, correlations, and external factor relationships.
+                </p>
+            </div>
+            {% else %}
+            <div class="p-6 text-center text-red-700 bg-red-50 rounded-lg border border-red-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto text-red-500 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="font-bold mb-2">Failed to generate Initial Data Insights Plots:</p>
+                <p class="text-sm">{{ error }}</p>
+                <p class="text-xs text-gray-500 mt-2">
+                    Please ensure 'department_17_sales.csv' is in the same directory as 'app.py' and contains the necessary columns ('Date', 'Weekly_Sales', 'Temperature').
+                </p>
+            </div>
+            {% endif %}
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold text-indigo-600 mb-5 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-2 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h14a1 1 0 001-1V4a1 1 0 00-1-1H3zm11.707 3.293a1 1 0 00-1.414 0L10 9.586 7.707 7.293a1 1 0 00-1.414 1.414L8.586 11l-2.293 2.293a1 1 0 001.414 1.414L10 12.414l2.293 2.293a1 1 0 001.414-1.414L11.414 11l2.293-2.293a1 1 0 000-1.414z" clip-rule="evenodd" />
+                </svg>
+                Time Series Decomposition
+            </h2>
+            {% if decomposition_plot %}
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
+                <img src="data:image/png;base64,{{ decomposition_plot }}" alt="Time Series Decomposition Plots" class="w-full h-auto rounded-lg shadow-md">
+                <p class="text-center text-sm text-gray-600 mt-3">
+                    This decomposition breaks down the 'Weekly_Sales' time series into its observed, trend, seasonal, and residual components, revealing underlying patterns.
+                </p>
+            </div>
+            {% else %}
+            <div class="p-6 text-center text-red-700 bg-red-50 rounded-lg border border-red-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto text-red-500 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="font-bold mb-2">Failed to generate Time Series Decomposition Plots:</p>
+                <p class="text-sm">{{ decomposition_error }}</p>
+                <p class="text-xs text-gray-500 mt-2">
+                    This typically occurs if the 'department_17_sales.csv' file is missing, or if there is insufficient data for seasonal decomposition (requires at least two full cycles, i.e., 104 weekly data points).
+                </p>
+            </div>
+            {% endif %}
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-bold text-indigo-600 mb-5 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-2 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h14a1 1 0 001-1V4a1 1 0 00-1-1H3zm11.707 3.293a1 1 0 00-1.414 0L10 9.586 7.707 7.293a1 1 0 00-1.414 1.414L8.586 11l-2.293 2.293a1 1 0 001.414 1.414L10 12.414l2.293 2.293a1 1 0 001.414-1.414L11.414 11l2.293-2.293a1 1 0 000-1.414z" clip-rule="evenodd" />
+                </svg>
+                ACF and PACF Plots
+            </h2>
+            {% if acf_pacf_plot %}
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
+                <img src="data:image/png;base64,{{ acf_pacf_plot }}" alt="ACF and PACF Plots" class="w-full h-auto rounded-lg shadow-md">
+                <p class="text-center text-sm text-gray-600 mt-3">
+                    These plots show the autocorrelation (ACF) and partial autocorrelation (PACF) for the original and first-differenced series, useful for identifying AR and MA orders for ARIMA models.
+                </p>
+            </div>
+            {% else %}
+            <div class="p-6 text-center text-red-700 bg-red-50 rounded-lg border border-red-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto text-red-500 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="font-bold mb-2">Failed to generate ACF and PACF Plots:</p>
+                <p class="text-sm">{{ acf_pacf_error }}</p>
+                <p class="text-xs text-gray-500 mt-2">
+                    This typically occurs if the 'department_17_sales.csv' file is missing, or if there is insufficient data to compute the specified lags.
+                </p>
+            </div>
+            {% endif %}
+        </section>
+
+        <footer class="mt-12 text-center text-gray-500 text-sm">
+            &copy; 2024 Time Series Analysis Project. All rights reserved.
+        </footer>
+    </div>
+</body>
+</html>
